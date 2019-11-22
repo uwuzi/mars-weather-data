@@ -3,6 +3,7 @@
 
 class Sol {
 private:
+    // SOL Key used for JSON API
     std::string m_Key;
 
     // Atmospheric Temp
@@ -82,9 +83,9 @@ public:
         return t;
     }
 
-    void print(int sensorNum) {
+    void print(std::string solNum) {
         std::cout << "\n=========================\n";
-        std::cout << "\tSENSOR #" << sensorNum;
+        std::cout << "MARTIAN SOL #" << solNum;
         std::cout << "\n=========================\n";
 
         std::cout << "Avg. Temp:\t" << this->m_AvgTemp << " F" << std::endl;

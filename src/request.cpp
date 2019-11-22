@@ -148,7 +148,7 @@ int main (int argc, char* argv[])
         );
 
         std::cout << std::endl;
-        tmp->print(i+1);
+        tmp->print(key);
         solVec.push_back(tmp);
     }
 
