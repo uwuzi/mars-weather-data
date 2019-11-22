@@ -7,6 +7,11 @@
 
 using namespace nlohmann;
 
+bool parseCmdArgs(int _argc, char* _argv[])
+{
+
+}
+
 std::string readApiKey()
 {
     std::ifstream fs;
@@ -19,7 +24,6 @@ std::string readApiKey()
     fs >> key;
     return key;
 }
-
 
 size_t curlCallbackFuncToString(void *contents, size_t size, size_t nmemb, std::string *s)
 {
