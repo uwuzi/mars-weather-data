@@ -9,7 +9,7 @@ using namespace nlohmann;
 
 bool parseCmdArgs(int _argc, char* _argv[])
 {
-
+    return true;
 }
 
 std::string readApiKey()

@@ -1,0 +1,68 @@
+@font-face {
+	font-family: 'IBM Plex Mono';
+	src:
+		local('IBM Plex Mono'),
+		url('../fonts/IBMPlexMono-Medium.ttf') format('ttf');
+}
+body{
+    background-color: #262626;
+    color: #dfdfdf;
+    font: normal 14px Arial, Helvetica, sans-serif;
+    /*font-family:'IBM Plex Mono', monospace*/
+    margin:20px 0 0 0;
+    padding:14px 0 0 0;
+}
+
+.info {
+    /*
+    margin:20px 0 0 0;
+    padding:14px 0 0 0;
+    */
+}
+.info h1 {
+}
+
+.navbar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+    width: 100%;
+    /*  
+    position: sticky;
+    position: -webkit-sticky; /* Safari */
+    position: fixed;
+    top: 0;
+  }
+  
+.navbar li {
+    float: left;
+  }
+  
+.navbar li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+  }
+  
+  /* Change the link color to #111 (black) on hover */
+  li a:hover {
+    background-color: #111;
+  }
+
+.plot-div {
+    margin:0 16px;
+    background-color: #262626 !important;
+    color: #dfdfdf;
+}
+#temperature-plot {
+    background-color: #262626 !important;
+    color: #dfdfdf;
+}
+#wind-speed-plot {
+    background-color: #262626 !important;
+    color: #dfdfdf;
+}
