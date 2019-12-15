@@ -6,7 +6,18 @@ xhr.send();
 xhr.addEventListener("readystatechange", processRequest, false);
 var graphDiv;
 var data;
+var min;
+var max;
+var avg;
 var layout;
+
+var paperBgColor = "rgba(255,255,255,0)";
+var paperFgColor= "rgba(223,223,223,1)";
+var plotBgColor = "rgba(255,255,255,.3)";
+var plotFgColor = "rgba(223,223,223,1)";
+
+
+
 
 function processRequest(e) {
     if (xhr.readyState == 4 && xhr.status == 200) {
@@ -16,26 +27,71 @@ function processRequest(e) {
 		
 		/* TEMPERATURE */
 		graphDiv = document.getElementById('temperature-plot');
-		data = [{
-			x: [solNum[0], solNum[1],
-				solNum[2], solNum[3],
-				solNum[4],solNum[5],
-				solNum[6]
-			],
-			y: [JSO[solNum[0]].AT.av, JSO[solNum[1]].AT.av,
-				JSO[solNum[2]].AT.av, JSO[solNum[1]].AT.av,
-				JSO[solNum[4]].AT.av, JSO[solNum[1]].AT.av,
-				JSO[solNum[6]].AT.av
-			],
-			type: 'scatter',
-			marker: {
-				color: '#8cd5ff'
-			  },
-			line: {
-				color: '#d1ff82'
-			}
-		}];
+		avg = {
+				x: [solNum[0], solNum[1],
+					solNum[2], solNum[3],
+					solNum[4],solNum[5],
+					solNum[6]
+				],
+				y: [JSO[solNum[0]].AT.av, JSO[solNum[1]].AT.av,
+					JSO[solNum[2]].AT.av, JSO[solNum[1]].AT.av,
+					JSO[solNum[4]].AT.av, JSO[solNum[1]].AT.av,
+					JSO[solNum[6]].AT.av
+				],
+				type: 'scatter',
+				name: 'Avg',
+				marker: {
+					color: '#8cd5ff'
+				  },
+				line: {
+					color: '#d1ff82',
+					width: 2
+				}
+			};
+		min = {
+				x: [solNum[0], solNum[1],
+					solNum[2], solNum[3],
+					solNum[4],solNum[5],
+					solNum[6]
+				],
+				y: [JSO[solNum[0]].AT.mn, JSO[solNum[1]].AT.mn,
+					JSO[solNum[2]].AT.mn, JSO[solNum[1]].AT.mn,
+					JSO[solNum[4]].AT.mn, JSO[solNum[1]].AT.mn,
+					JSO[solNum[6]].AT.mn
+				],
+				type: 'scatter',
+				name: 'Min',
+				marker: {
+					color: '#8cd5ff'
+				  },
+				line: {
+					color: '#ff8c82',
+					width: 2
+				}
+			};
+		max = {
+				x: [solNum[0], solNum[1],
+					solNum[2], solNum[3],
+					solNum[4],solNum[5],
+					solNum[6]
+				],
+				y: [JSO[solNum[0]].AT.mx, JSO[solNum[1]].AT.mx,
+					JSO[solNum[2]].AT.mx, JSO[solNum[1]].AT.mx,
+					JSO[solNum[4]].AT.mx, JSO[solNum[1]].AT.mx,
+					JSO[solNum[6]].AT.mx
+				],
+				type: 'scatter',
+				name: 'Max',
+				marker: {
+					color: '#8cd5ff'
+				  },
+				line: {
+					color: '#e4c6fa',
+					width: 2
+				}
+			};
 
+		data = [max, avg, min];
 		layout = {
 			title: {
 				text:'Temperature Data: x days',
@@ -56,16 +112,16 @@ function processRequest(e) {
 				color: '#dfdfdf',
 		  	  	showline: false
 			},
-			paper_bgcolor: "rgba(255,255,255,0)",
-			plot_bgcolor: "rgba(255,255,255,.1)",
-			paper_fgcolor: "rgba(223,223,223,1)",
-			plot_fgcolor: "rgba(223,223,223,1)"
+			paper_bgcolor: paperBgColor,
+			plot_bgcolor: plotBgColor,
+			paper_fgcolor: paperFgColor,
+			plot_fgcolor: plotFgColor
 		};
 		Plotly.newPlot(graphDiv, data, layout);
 
 		/* WIND SPEED */
 		graphDiv = document.getElementById('wind-speed-plot');
-		data = [{
+		avg = {
 			x: [solNum[0], solNum[1],
 				solNum[2], solNum[3],
 				solNum[4],solNum[5],
@@ -78,14 +134,59 @@ function processRequest(e) {
 			],
 
 			type: 'scatter',
+			name: 'Avg',
 			marker: {
 				color: '#8cd5ff'
 			},
 			line: {
-				color: '#d1ff82'
+				color: '#d1ff82',
+				width: 2
 			},
-			/*type: 'bar'*/
-		}];
+		};
+		min = {
+			x: [solNum[0], solNum[1],
+				solNum[2], solNum[3],
+				solNum[4],solNum[5],
+				solNum[6]
+			],
+			y: [JSO[solNum[0]].HWS.mn, JSO[solNum[1]].HWS.mn,
+				JSO[solNum[2]].HWS.mn, JSO[solNum[1]].HWS.mn,
+				JSO[solNum[4]].HWS.mn, JSO[solNum[1]].HWS.mn,
+				JSO[solNum[6]].HWS.mn
+			],
+
+			type: 'scatter',
+			name: 'Min',
+			marker: {
+				color: '#8cd5ff'
+			},
+			line: {
+				color: '#ff8c82',
+				width: 2
+			},
+		};
+		max = {
+			x: [solNum[0], solNum[1],
+				solNum[2], solNum[3],
+				solNum[4],solNum[5],
+				solNum[6]
+			],
+			y: [JSO[solNum[0]].HWS.mx, JSO[solNum[1]].HWS.mx,
+				JSO[solNum[2]].HWS.mx, JSO[solNum[1]].HWS.mx,
+				JSO[solNum[4]].HWS.mx, JSO[solNum[1]].HWS.mx,
+				JSO[solNum[6]].HWS.mx
+			],
+
+			type: 'scatter',
+			name: 'Max',
+			marker: {
+				color: '#8cd5ff'
+			},
+			line: {
+				color: '#e4c6fa'
+			},
+		};
+		data = [max, avg, min];
 
 		layout = {
 			title: {
@@ -107,10 +208,10 @@ function processRequest(e) {
 				color: '#dfdfdf',
 		  	  	showline: false
 			},
-			paper_bgcolor: "rgba(255,255,255,0)",
-			plot_bgcolor: "rgba(255,255,255,.1)",
-			paper_fgcolor: "rgba(223,223,223,1)",
-			plot_fgcolor: "rgba(223,223,223,1)"
+			paper_bgcolor: paperBgColor,
+			plot_bgcolor: plotBgColor,
+			paper_fgcolor: paperFgColor,
+			plot_fgcolor: plotFgColor
 		};
 		Plotly.newPlot(graphDiv, data, layout);
 
@@ -162,10 +263,9 @@ function processRequest(e) {
 				}
 			},
 		
-			paper_bgcolor: "rgba(255,255,255,0)",
-			plot_bgcolor: "rgba(255,255,255,.1)",
-			paper_fgcolor: "rgba(223,223,223,1)",
-			plot_fgcolor: "rgba(223,223,223,1)"
+			paper_bgcolor: paperBgColor, plot_bgcolor: plotBgColor,
+			paper_fgcolor: paperFgColor,
+			plot_fgcolor: plotFgColor
 		  }
 	  
 		graphDiv = document.getElementById('wind-direction-plot');
@@ -173,7 +273,7 @@ function processRequest(e) {
 
 		/* PRESSURE */
 		graphDiv = document.getElementById('pressure-plot');
-		data = [{
+		avg = {
 			x: [solNum[0], solNum[1],
 				solNum[2], solNum[3],
 				solNum[4],solNum[5],
@@ -193,7 +293,49 @@ function processRequest(e) {
 				color: '#d1ff82'
 			},
 			/*type: 'bar'*/
-		}];
+		};
+		max = {
+			x: [solNum[0], solNum[1],
+				solNum[2], solNum[3],
+				solNum[4],solNum[5],
+				solNum[6]
+			],
+			y: [JSO[solNum[0]].PRE.mx, JSO[solNum[1]].PRE.mx,
+				JSO[solNum[2]].PRE.mx, JSO[solNum[1]].PRE.mx,
+				JSO[solNum[4]].PRE.mx, JSO[solNum[1]].PRE.mx,
+				JSO[solNum[6]].PRE.mx
+			],
+
+			type: 'scatter',
+			marker: {
+				color: '#8cd5ff'
+			},
+			line: {
+				color: '#e4c6fa'
+			},
+		};
+		min = {
+			x: [solNum[0], solNum[1],
+				solNum[2], solNum[3],
+				solNum[4],solNum[5],
+				solNum[6]
+			],
+			y: [JSO[solNum[0]].PRE.mn, JSO[solNum[1]].PRE.mn,
+				JSO[solNum[2]].PRE.mn, JSO[solNum[1]].PRE.mn,
+				JSO[solNum[4]].PRE.mn, JSO[solNum[1]].PRE.mn,
+				JSO[solNum[6]].PRE.mn
+			],
+
+			type: 'scatter',
+			marker: {
+				color: '#8cd5ff'
+			},
+			line: {
+				color: '#ff8c82'
+			},
+			/*type: 'bar'*/
+		};
+		data = [avg, min, max];
 
 		layout = {
 			title: {
@@ -211,14 +353,14 @@ function processRequest(e) {
 		    	zeroline: true
 		  	},
 		  	yaxis: {
-				title: 'Horizontal Wind Speed (m/s)',
+				title: 'Air Pressure (Pa)',
 				color: '#dfdfdf',
 		  	  	showline: false
 			},
-			paper_bgcolor: "rgba(255,255,255,0)",
-			plot_bgcolor: "rgba(255,255,255,.1)",
-			paper_fgcolor: "rgba(223,223,223,1)",
-			plot_fgcolor: "rgba(223,223,223,1)"
+			paper_bgcolor: paperBgColor,
+			plot_bgcolor: plotBgColor,
+			paper_fgcolor: paperFgColor,
+			plot_fgcolor: plotFgColor
 		};
 		Plotly.newPlot(graphDiv, data, layout);
 
@@ -262,10 +404,10 @@ layout = {
 		color: '#dfdfdf',
   	  	showline: false
 	},
-	paper_bgcolor: "rgba(255,255,255,0)",
-	plot_bgcolor: "rgba(255,255,255,.1)",
-	paper_fgcolor: "rgba(223,223,223,1)",
-	plot_fgcolor: "rgba(223,223,223,1)"
+	paper_bgcolor: paperBgColor,
+	plot_bgcolor: plotBgColor,
+	paper_fgcolor: paperFgColor,
+	plot_fgcolor: plotFgColor
 };
 Plotly.newPlot(graphDiv, data, layout);
 /*
@@ -285,7 +427,8 @@ data = [{
 		color: '#8cd5ff'
 	},
 	line: {
-		color: '#d1ff82'
+		color: '#d1ff82',
+		width: 2
 	},
 	/*type: 'bar'*/
 }];
@@ -310,10 +453,10 @@ layout = {
 		color: '#dfdfdf',
   	  	showline: false
 	},
-	paper_bgcolor: "rgba(255,255,255,0)",
-	plot_bgcolor: "rgba(255,255,255,.1)",
-	paper_fgcolor: "rgba(223,223,223,1)",
-	plot_fgcolor: "rgba(223,223,223,1)"
+	paper_bgcolor: paperBgColor,
+	plot_bgcolor: plotBgColor,
+	paper_fgcolor: paperFgColor,
+	plot_fgcolor: plotFgColor
 };
 Plotly.newPlot(graphDiv, data, layout);
 
@@ -362,10 +505,10 @@ layout = {
 		}
 	},
 
-	paper_bgcolor: "rgba(255,255,255,0)",
-	plot_bgcolor: "rgba(255,255,255,.1)",
-	paper_fgcolor: "rgba(223,223,223,1)",
-	plot_fgcolor: "rgba(223,223,223,1)"
+	paper_bgcolor: paperBgColor,
+	plot_bgcolor: plotBgColor,
+	paper_fgcolor: paperFgColor,
+	plot_fgcolor: plotFgColor
   }
 
 graphDiv = document.getElementById('wind-direction-plot');
