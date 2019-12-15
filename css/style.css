@@ -7,39 +7,29 @@
 body{
     background-color: #262626;
     color: #dfdfdf;
-    font: normal 14px Arial, Helvetica, sans-serif;
-    /*font-family:'IBM Plex Mono', monospace*/
-    margin:20px 0 0 0;
-    padding:14px 0 0 0;
-}
-
-.info {
-    /*
-    margin:20px 0 0 0;
-    padding:14px 0 0 0;
+    /*font: normal 14px Arial, Helvetica, sans-serif;
     */
+    font-family: Courier New, Courier, Lucida Sans Typewriter, Lucida Typewriter, monospace;
 }
-.info h1 {
+.navbar {
+    padding: 0;
+    margin: 0;
 }
-
 .navbar ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: #333;
+    background-color: #181818;
     width: 100%;
     /*  
     position: sticky;
     position: -webkit-sticky; /* Safari */
-    position: fixed;
-    top: 0;
+    position: relative;
   }
-  
 .navbar li {
     float: left;
   }
-  
 .navbar li a {
     display: block;
     color: white;
@@ -47,11 +37,30 @@ body{
     padding: 14px 16px;
     text-decoration: none;
   }
-  
   /* Change the link color to #111 (black) on hover */
   li a:hover {
-    background-color: #111;
+    background-color: #d1ff82;
+    color: #181818;
   }
+
+.info {
+    margin:0 16px;
+}
+.info h1 {
+}
+.info a {
+    text-decoration: underline;
+    color: #d1ff82;
+}
+
+/*
+.info a:visited{
+    text-decoration: underline;
+    color: #d1ff82;
+}
+*/
+
+
 
 .plot-div {
     margin:0 16px;
