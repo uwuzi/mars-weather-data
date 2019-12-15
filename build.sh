@@ -1,3 +1,3 @@
 #!/bin/bash
-
-g++ -Wall -lcurl src/*.cpp -o bin/run
+cd src
+g++ -Wall -lcurl *.cpp -o a.out

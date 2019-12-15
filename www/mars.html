@@ -12,13 +12,13 @@
 </head>
 
 <body>
-
     <!--NAVBAR-->
     <div class="navbar">
             <ul>
                     <li><a href="mars.html">Mars Weather Data</a></li>
-                    <li><a href="news.asp">Algorithm Art</a></li>
-                    <li><a href="http://grhm.xyz">My Website</a></li>
+                    <li><a href="alg.html">Algorithm Art</a></li>
+                    <!--<li><a href="http://grhm.xyz">My Website</a></li>-->
+                    <li><a href="http://192.168.1.42:419">My Website</a></li>
             </ul> 
     </div>
 
@@ -26,7 +26,8 @@
     <div class="info">
         <h1>Daily Mars Weather Data</h1>
         <h3><a href="https://github.com/uwuzi/nasa-mars-data" target="_blank">GitHub page</a></h3>
-        <h3>Data obtained from NASA's Insight Mission API</h3>
+        <p><strong>Data is obtained from NASA's Insight Mission API. Measurements are taken once daily.</strong></p>
+        <p><strong>I started recording the data on December 15, 2019, and hope to keep adding as long as they continue to make it available</strong></p>
     </div>
 
     <br>
@@ -44,15 +45,22 @@
     <hr>
     <br>
 
-    <!--WINDSPEED PLOT-->
+    <!--WIND PLOTS-->
     <div class="plot-div">
         <h1>Wind Speed & Direction</h1>
         <div id="wind-speed-plot" style="width:auto;height:500;"></div>
         <div id="wind-direction-plot" style="width:auto;height:500;"></div>
     </div>
 
-    
+    <br>
+    <hr>
+    <br>
 
+    <!--PRESSURE PLOT-->
+    <div class="plot-div">
+        <h1>Air Pressure</h1>
+        <div id="pressure-plot" style="width:auto;height:500;"></div>
+    </div>
 
 
 

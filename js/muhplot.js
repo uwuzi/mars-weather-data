@@ -179,10 +179,10 @@ function processRequest(e) {
 				solNum[4],solNum[5],
 				solNum[6]
 			],
-			y: [JSO[solNum[0]].HWS.av, JSO[solNum[1]].HWS.av,
-				JSO[solNum[2]].HWS.av, JSO[solNum[1]].HWS.av,
-				JSO[solNum[4]].HWS.av, JSO[solNum[1]].HWS.av,
-				JSO[solNum[6]].HWS.av
+			y: [JSO[solNum[0]].PRE.av, JSO[solNum[1]].PRE.av,
+				JSO[solNum[2]].PRE.av, JSO[solNum[1]].PRE.av,
+				JSO[solNum[4]].PRE.av, JSO[solNum[1]].PRE.av,
+				JSO[solNum[6]].PRE.av
 			],
 
 			type: 'scatter',
@@ -197,7 +197,7 @@ function processRequest(e) {
 
 		layout = {
 			title: {
-				text:'Wind Speed Data: x days',
+				text:'Air Pressure Data: x days',
 				font: {
 				  family: 'Courier New, monospace',
 				  size: 24,
