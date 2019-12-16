@@ -231,16 +231,36 @@ function processRequest(e) {
 
 		/* WIND DIRECTION*/
 		{
+		var windDataFullSet = [];
+		var windDataSingleDay = []; // An array of data objects
+		var r_arr = [];
+		var theta_arr = [];
+		// ... Each day
 		for (var i = 0; i < solNum.length; i++) {
-			console.log("\n******** "+solNum[i]+" ********");
+			// ... Each compass reading within that day
 			for (var compass_pt_no in JSO[solNum[i]].WD) {
-				console.log(JSO[solNum[i]].WD[compass_pt_no].compass_degrees);
-				console.log(JSO[solNum[i]].WD[compass_pt_no].compass_point);
+				r_arr.push(JSO[solNum[i]].WD[compass_pt_no].compass_degrees);
+				theta_arr.push(JSO[solNum[i]].WD[compass_pt_no].compass_point);
+				var windData = {
+					r:		r_arr,
+					theta: 	theta_arr,
+					name: 	"Sol #" +solNum[i],
+					marker: {
+							color: "rgb(106,81,153)"
+					},
+					type: 	"barpolar"
+				}
+				windDataSingleDay.push(windData);
 			}
+			windDataFullSet.push(windDataSingleDay);
+			//console.log(JSO[solNum[i]].WD[compass_pt_no].compass_degrees);
+			//console.log(JSO[solNum[i]].WD[compass_pt_no].compass_point);
 		}
-
-		data = [{
-		    //r: [JSO[solNum[0]].WD.most_common.compass_degrees],
+		console.log(windDataFullSet);
+		data = windDataFullSet;
+		/*
+		[{
+		    r: [JSO[solNum[0]].WD.most_common.compass_degrees],
 		    theta: [JSO[solNum[0]].WD.most_common.compass_point],
 		    name: "Sol #"+solNum[0],
 		    marker: {color: "rgb(106,81,163)"},
@@ -262,8 +282,9 @@ function processRequest(e) {
 		    theta: ["North", "N-E", "East", "S-E", "South", "S-W", "West", "N-W"],
 		    name: "< 5 m/s",
 		    marker: {color: "rgb(242,240,247)"},
-		    type: "barpolar"
+			type: "barpolar"
 		  }]
+		*/
 		layout = {
 		    font: {size: 16},
 			legend: {font: {size: 16}},
@@ -282,14 +303,14 @@ function processRequest(e) {
 				  color: '#dfdfdf'
 				}
 			},
-		
-			paper_bgcolor: paperBgColor, plot_bgcolor: plotBgColor,
+			paper_bgcolor: paperBgColor, 
+			plot_bgcolor: plotBgColor,
 			paper_fgcolor: paperFgColor,
 			plot_fgcolor: plotFgColor
 		  }
 	  
 		graphDiv = document.getElementById('wind-direction-plot');
-		Plotly.newPlot(graphDiv, data, layout)
+		Plotly.newPlot(graphDiv, windDataFullSet, layout)
 	}
 
 
