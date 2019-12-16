@@ -16,16 +16,21 @@ var paperFgColor= "rgba(223,223,223,1)";
 var plotBgColor = "rgba(255,255,255,.3)";
 var plotFgColor = "rgba(223,223,223,1)";
 
+var plotTitleFont = {family: 'Courier New, monospace', size: 24, color: '#dfdfdf'};
+var plotAxisFont = {family: 'Courier New, monospace', size: 16, color: '#dfdfdf'};
 
 
 
 function processRequest(e) {
     if (xhr.readyState == 4 && xhr.status == 200) {
+		/* PARSE HTTP RESPONSE, GET TOP LEVEL JSON KEYS */
 		var JSO = JSON.parse(xhr.responseText);
 		var solNum = [JSO.sol_keys[0],JSO.sol_keys[1],JSO.sol_keys[2],
 			JSO.sol_keys[3],JSO.sol_keys[4],JSO.sol_keys[5],JSO.sol_keys[6]]
 		
+
 		/* TEMPERATURE */
+		{
 		graphDiv = document.getElementById('temperature-plot');
 		avg = {
 				x: [solNum[0], solNum[1],
@@ -95,20 +100,23 @@ function processRequest(e) {
 		layout = {
 			title: {
 				text:'Temperature Data: x days',
-				font: {
-				  family: 'Courier New, monospace',
-				  size: 24,
-				  color: '#dfdfdf'
-				}
+				font: plotTitleFont
 			},
 		  	xaxis: {
-		    	title: 'Martian Sol (Day) # ',
+		    	title: {
+					text: 'Martian Sol (Day) # ',
+					font : plotAxisFont
+				},
+				name: 'Avg',
 				color: '#dfdfdf',
 		    	showgrid: true,
 		    	zeroline: true
 		  	},
 		  	yaxis: {
-		  	  	title: 'Temp (F)',
+		  	  	title: {
+					text: 'Temp (F)',
+					font: plotAxisFont
+				},
 				color: '#dfdfdf',
 		  	  	showline: false
 			},
@@ -118,8 +126,12 @@ function processRequest(e) {
 			plot_fgcolor: plotFgColor
 		};
 		Plotly.newPlot(graphDiv, data, layout);
+		}
+
+
 
 		/* WIND SPEED */
+		{
 		graphDiv = document.getElementById('wind-speed-plot');
 		avg = {
 			x: [solNum[0], solNum[1],
@@ -214,13 +226,21 @@ function processRequest(e) {
 			plot_fgcolor: plotFgColor
 		};
 		Plotly.newPlot(graphDiv, data, layout);
-
-
-		for (var i = 0; i < 7; i++) {
-			console.log(JSO[solNum[i]].WD);
 		}
+
+
+		/* WIND DIRECTION*/
+		{
+		for (var i = 0; i < solNum.length; i++) {
+			console.log("\n******** "+solNum[i]+" ********");
+			for (var compass_pt_no in JSO[solNum[i]].WD) {
+				console.log(JSO[solNum[i]].WD[compass_pt_no].compass_degrees);
+				console.log(JSO[solNum[i]].WD[compass_pt_no].compass_point);
+			}
+		}
+
 		data = [{
-		    r: [JSO[solNum[0]].WD.most_common.compass_degrees],
+		    //r: [JSO[solNum[0]].WD.most_common.compass_degrees],
 		    theta: [JSO[solNum[0]].WD.most_common.compass_point],
 		    name: "Sol #"+solNum[0],
 		    marker: {color: "rgb(106,81,163)"},
@@ -270,8 +290,11 @@ function processRequest(e) {
 	  
 		graphDiv = document.getElementById('wind-direction-plot');
 		Plotly.newPlot(graphDiv, data, layout)
+	}
+
 
 		/* PRESSURE */
+		{
 		graphDiv = document.getElementById('pressure-plot');
 		avg = {
 			x: [solNum[0], solNum[1],
@@ -336,7 +359,6 @@ function processRequest(e) {
 			/*type: 'bar'*/
 		};
 		data = [avg, min, max];
-
 		layout = {
 			title: {
 				text:'Air Pressure Data: x days',
@@ -363,7 +385,7 @@ function processRequest(e) {
 			plot_fgcolor: plotFgColor
 		};
 		Plotly.newPlot(graphDiv, data, layout);
-
+	}
 
 
     }
