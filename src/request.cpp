@@ -102,6 +102,26 @@ std::string makeRequest(std::string& httpsUrl)
   return s;
 }
 
+void readDetailedWindData(json& JSO, std::vector<std::string>& sol){
+    std::cout <<"\n\n";
+    for (int i = 0; i < 7; i++) {
+        std::string key1 = sol.at(i);
+        std::cout << "\n----------------------------------" << std::endl;
+        std::cout << "SOL #" << sol.at(i) << std::endl;
+        for (int j = 0; j < 15; j++) {
+            json js = JSO[key1]["WD"][std::to_string(j)];
+            if (!js.is_null()) {
+                std::cout << "compass_no: " << j << std::endl;
+                std::cout << "compass_degrees: " << JSO[key1]["WD"][std::to_string(j)]["compass_degrees"] << std::endl;
+                std::cout << "compass_point: " << JSO[key1]["WD"][std::to_string(j)]["compass_point"] << std::endl;
+                std::cout << "compass_right: " << JSO[key1]["WD"][std::to_string(j)]["compass_right"] << std::endl;
+                std::cout << "compass_up: " << JSO[key1]["WD"][std::to_string(j)]["compass_up"] << std::endl;
+                //std::cout << js << std::endl;
+                std::cout << "\n\n";
+            }
+        }
+    }
+}
 int main (int argc, char* argv[]) 
 {
     std::vector<Sol*> solVec;
@@ -115,7 +135,8 @@ int main (int argc, char* argv[])
 
     json JSO = json::parse(jsonString);
 
-    auto sol = JSO["sol_keys"];
+    std::vector<std::string> sol = JSO["sol_keys"];
+
     for (int i = 0; i < sol.size(); i++) {
         Sol *tmp = new Sol();
         std::string key = sol.at(i);
@@ -156,5 +177,12 @@ int main (int argc, char* argv[])
         solVec.push_back(tmp);
     }
 
+    readDetailedWindData(JSO, sol);
     return 0;
 }
+
+
+
+
+
+
