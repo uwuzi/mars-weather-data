@@ -276,7 +276,7 @@ function processRequest(e) {
 
 		/* WIND DIRECTION DATA FOR MOST RECENT DAY*/
 		{
-		var windDataSet = [];
+		var windRoseDataSet = [];
 		var n = 0;
 		for (var compass_pt_no in JSO[solNum[6]].WD) {
 			var r_arr = [];
@@ -291,18 +291,25 @@ function processRequest(e) {
 				},
 				type: 	"barpolar"
 			}
-			windDataSet.push(windDataInstance);
+			windRoseDataSet.push(windDataInstance);
 			n++;
 		}
-	layout = {
+		layout = {
 		    font: {size: 12},
-			legend: {font: {size: 12}},
 			color: '#dfdfdf',
+			showlegend: false,
 		    polar: {
 		    	barmode: "overlay",
 		    	bargap: 10,
-		    	//radialaxis: {ticksuffix: "%", angle: 45, dtick: 20},
-		    	//angularaxis: {direction: "clockwise"}
+		    	radialaxis: {
+					showradialaxis: false,
+					ticksuffix: "%", angle: 0, dtick: 0,
+					color: "#dfdfdf00"
+				},
+		    	angularaxis: {
+					color: '#dfdfdf',
+					direction: "clockwise",
+				}
 			},
 			title: {
 				text:'Wind Direction Chart: Today',
@@ -316,12 +323,66 @@ function processRequest(e) {
 			plot_bgcolor: plotBgColor,
 			paper_fgcolor: paperFgColor,
 			plot_fgcolor: plotFgColor
-		  }
-	  
+		}
 		graphDiv = document.getElementById('wind-direction-plot');
-		Plotly.newPlot(graphDiv, windDataSet, layout)
+		Plotly.newPlot(graphDiv, windRoseDataSet, layout)
 		}	
-
+		/* WIND DIRECTION BAR GRAPH */
+		var trace1 = {
+			x: [20, 14, 23],
+			y: ['giraffes', 'orangutans', 'monkeys'],
+			name: 'SF Zoo',
+			type: 'bar',
+			orientation: 'h',
+		};
+		var trace2 = {
+			x: [12, 18, 29],
+			y: ['giraffes', 'orangutans', 'monkeys'],
+			name: 'LA Zoo',
+			type: 'bar',
+			orientation: 'h',
+		};
+		data = [
+			trace1, trace2
+		];
+		var layout = {
+			title: {
+				text:'Wind Direction Chart: Today',
+				font: {
+				  family: 'Courier New, monospace',
+				  size: 18,
+				  color: '#dfdfdf'
+				}
+			},
+			xaxis: {
+		    	title: {
+					text: 'Martian Sol (Day) # ',
+					font : plotAxisFont
+				},
+				name: 'Avg',
+				color: '#dfdfdf',
+		    	showgrid: true,
+		    	zeroline: true
+			  },
+			yaxis: {
+		    	title: {
+					text: '# ',
+					font : plotAxisFont
+				},
+				name: 'Avg',
+				color: '#dfdfdf',
+		    	showgrid: true,
+		    	zeroline: true
+		  	},
+			barmode: 'stack',
+			paper_bgcolor: paperBgColor, 
+			plot_bgcolor: plotBgColor,
+			paper_fgcolor: paperFgColor,
+			plot_fgcolor: plotFgColor
+		}
+		;
+		Plotly.newPlot('wind-direction-bar', data, layout);
+		  
 
 		/* PRESSURE */
 		{
@@ -386,7 +447,6 @@ function processRequest(e) {
 			line: {
 				color: '#ff8c82'
 			},
-			/*type: 'bar'*/
 		};
 		data = [avg, min, max];
 		layout = {
@@ -419,51 +479,14 @@ function processRequest(e) {
 	}
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* -----------------------------------------------------*/
+/* -------------------- DUMMY --------------------------*/
+/* -------------------- PLOTS ---------------------------*/
 /* -----------------------------------------------------*/
-/* -----------------------------------------------------*/
-/* -----------------------------------------------------*/
-
 /* TEMPERATURE */
 graphDiv = document.getElementById('temperature-plot');
 data = [{
-	x: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
-	y: [1, 2, 4, 8, 6, 2, 8, 2, 6, 82, 13, 32, 22, 12, 55, 23] ,
-	type: 'scatter',
-	marker: {
-		color: '#8cd5ff'
-	  },
-	line: {
-		color: '#d1ff82'
-	}
 }];
-
 layout = {
 	title: {
 		text:'Temperature Data: x days',
@@ -490,29 +513,10 @@ layout = {
 	plot_fgcolor: plotFgColor
 };
 Plotly.newPlot(graphDiv, data, layout);
-/*
-var dataRetrievedLater = graphDiv.data;
-var layoutRetrievedLater = graphDiv.layout;
-*/
-var temperatureData= graphDiv.data;
-var temperatureLayout= graphDiv.layout;
-
 /* WIND SPEED */
 graphDiv = document.getElementById('wind-speed-plot');
 data = [{
-	x: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
-	y: [1, 2, 4, 8, 6, 2, 8, 2, 6, 82, 13, 32, 22, 12, 55, 23] ,
-	type: 'scatter',
-	marker: {
-		color: '#8cd5ff'
-	},
-	line: {
-		color: '#d1ff82',
-		width: 2
-	},
-	/*type: 'bar'*/
 }];
-
 layout = {
 	title: {
 		text:'Wind Speed Data: x days',
@@ -539,32 +543,7 @@ layout = {
 	plot_fgcolor: plotFgColor
 };
 Plotly.newPlot(graphDiv, data, layout);
-
-
 data = [{
-    r: [77.5, 72.5, 70.0, 45.0, 22.5, 42.5, 40.0, 62.5],
-    theta: ["North", "N-E", "East", "S-E", "South", "S-W", "West", "N-W"],
-    name: "11-14 m/s",
-    marker: {color: "rgb(106,81,163)"},
-    type: "barpolar"
-  }, {
-    r: [57.5, 50.0, 45.0, 35.0, 20.0, 22.5, 37.5, 55.0],
-    theta: ["North", "N-E", "East", "S-E", "South", "S-W", "West", "N-W"],
-    name: "8-11 m/s",
-    marker: {color: "rgb(158,154,200)"},
-    type: "barpolar"
-  }, {
-    r: [40.0, 30.0, 30.0, 35.0, 7.5, 7.5, 32.5, 40.0],
-    theta: ["North", "N-E", "East", "S-E", "South", "S-W", "West", "N-W"],
-    name: "5-8 m/s",
-    marker: {color: "rgb(203,201,226)"},
-    type: "barpolar"
-  }, {
-    r: [20.0, 7.5, 15.0, 22.5, 2.5, 2.5, 12.5, 22.5],
-    theta: ["North", "N-E", "East", "S-E", "South", "S-W", "West", "N-W"],
-    name: "< 5 m/s",
-    marker: {color: "rgb(242,240,247)"},
-    type: "barpolar"
   }]
 layout = {
     font: {size: 16},
@@ -590,7 +569,5 @@ layout = {
 	paper_fgcolor: paperFgColor,
 	plot_fgcolor: plotFgColor
   }
-
 graphDiv = document.getElementById('wind-direction-plot');
 Plotly.newPlot(graphDiv, data, layout)
-

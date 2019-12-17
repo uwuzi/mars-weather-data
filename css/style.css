@@ -7,8 +7,6 @@
 body{
     background-color: #262626;
     color: #dfdfdf;
-    /*font: normal 14px Arial, Helvetica, sans-serif;
-    */
     font-family: Courier New, Courier, Lucida Sans Typewriter, Lucida Typewriter, monospace;
 }
 .navbar {
@@ -64,14 +62,31 @@ body{
 
 .plot-div {
     margin:0 16px;
-    background-color: #262626 !important;
+    background-color: #262626;
     color: #dfdfdf;
 }
 #temperature-plot {
-    background-color: #262626 !important;
+    background-color: #262626;
     color: #dfdfdf;
 }
 #wind-speed-plot {
-    background-color: #262626 !important;
+    background-color: #262626;
     color: #dfdfdf;
 }
+
+#wind-direction-plot{
+    height:500px;
+    float: left;
+    background-color: #262626;
+    color: #dfdfdf;
+}
+#wind-direction-bar {
+    height:500px;
+    float:right;
+    background-color: #262626;
+    color: #dfdfdf;
+}
+
+
+
+
