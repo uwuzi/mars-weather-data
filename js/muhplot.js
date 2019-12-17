@@ -11,14 +11,59 @@ var max;
 var avg;
 var layout;
 
+/* Line Graph Colorscheme*/
 var paperBgColor = "rgba(255,255,255,0)";
 var paperFgColor= "rgba(223,223,223,1)";
 var plotBgColor = "rgba(255,255,255,.3)";
 var plotFgColor = "rgba(223,223,223,1)";
-
 var plotTitleFont = {family: 'Courier New, monospace', size: 24, color: '#dfdfdf'};
 var plotAxisFont = {family: 'Courier New, monospace', size: 16, color: '#dfdfdf'};
 
+/* Wind Rose Diagram Colorscheme */
+/* Partially generated with #aada2c @ https://mycolor.space/?hex=%23AADA2C&sub=1 */
+/*
+	"#d0d0d0",
+	"#66AA11",
+	"#c47f2c",
+	"#30309b",
+	"#7e40a5",
+	"#3579A8",
+	"#9999AA",
+	"#303030",
+	"#ff0090",
+	"#80FF00",
+	"#ffba68",
+	"#5f5fee",
+	"#bb88dd",
+	"#4eb4fa",
+	"#ffffff"
+	"#aada2c",
+	"#454839",
+	"#a9ad9b",
+	"#00d0f2",
+	"#0097b9",
+	"#ab2969",
+	"#fcfcd4"
+	*/
+var WRColors = [
+	"#DBF0A8",
+	"#D4ED97",
+	"#CDEA86",
+	"#C6E774",
+	"#BFE363",
+	"#B8E052",
+	"#B1DD40",
+	"#AADA2C",
+	"#A0D025",
+	"#92BF22",
+	"#85AD1F",
+	"#789C1C",
+	"#6A8B18",
+	"#5D7915",
+	"#506812",
+	"#42570F"
+
+];
 
 
 function processRequest(e) {
@@ -27,7 +72,7 @@ function processRequest(e) {
 		var JSO = JSON.parse(xhr.responseText);
 		var solNum = [JSO.sol_keys[0],JSO.sol_keys[1],JSO.sol_keys[2],
 			JSO.sol_keys[3],JSO.sol_keys[4],JSO.sol_keys[5],JSO.sol_keys[6]]
-		
+
 
 		/* TEMPERATURE */
 		{
@@ -229,77 +274,41 @@ function processRequest(e) {
 		}
 
 
-		/* WIND DIRECTION*/
+		/* WIND DIRECTION DATA FOR MOST RECENT DAY*/
 		{
-		var windDataFullSet = [];
-		var windDataSingleDay = []; // An array of data objects
-		var r_arr = [];
-		var theta_arr = [];
-		// ... Each day
-		for (var i = 0; i < solNum.length; i++) {
-			// ... Each compass reading within that day
-			for (var compass_pt_no in JSO[solNum[i]].WD) {
-				r_arr.push(JSO[solNum[i]].WD[compass_pt_no].compass_degrees);
-				theta_arr.push(JSO[solNum[i]].WD[compass_pt_no].compass_point);
-				var windData = {
-					r:		r_arr,
-					theta: 	theta_arr,
-					name: 	"Sol #" +solNum[i],
-					marker: {
-							color: "rgb(106,81,153)"
-					},
-					type: 	"barpolar"
-				}
-				windDataSingleDay.push(windData);
+		var windDataSet = [];
+		var n = 0;
+		for (var compass_pt_no in JSO[solNum[6]].WD) {
+			var r_arr = [];
+			var theta_arr = [];
+			r_arr.push(JSO[solNum[6]].WD[compass_pt_no].compass_degrees);
+			theta_arr.push(JSO[solNum[6]].WD[compass_pt_no].compass_point);
+			var windDataInstance = {
+				r:		r_arr,
+				theta: 	theta_arr,
+				marker: {
+						color: WRColors[n]
+				},
+				type: 	"barpolar"
 			}
-			windDataFullSet.push(windDataSingleDay);
-			//console.log(JSO[solNum[i]].WD[compass_pt_no].compass_degrees);
-			//console.log(JSO[solNum[i]].WD[compass_pt_no].compass_point);
+			windDataSet.push(windDataInstance);
+			n++;
 		}
-		console.log(windDataFullSet);
-		data = windDataFullSet;
-		/*
-		[{
-		    r: [JSO[solNum[0]].WD.most_common.compass_degrees],
-		    theta: [JSO[solNum[0]].WD.most_common.compass_point],
-		    name: "Sol #"+solNum[0],
-		    marker: {color: "rgb(106,81,163)"},
-		    type: "barpolar"
-		  }, {
-		    r: [JSO[solNum[1]].WD.most_common.compass_degrees],
-		    theta: [JSO[solNum[1]].WD.most_common.compass_point],
-		    name: "Sol #"+solNum[1],
-		    marker: {color: "rgb(158,154,200)"},
-		    type: "barpolar"
-		  }, {
-		    r: [40.0, 30.0, 30.0, 35.0, 7.5, 7.5, 32.5, 40.0],
-		    theta: ["North", "N-E", "East", "S-E", "South", "S-W", "West", "N-W"],
-		    name: "5-8 m/s",
-		    marker: {color: "rgb(203,201,226)"},
-		    type: "barpolar"
-		  }, {
-		    r: [20.0, 7.5, 15.0, 22.5, 2.5, 2.5, 12.5, 22.5],
-		    theta: ["North", "N-E", "East", "S-E", "South", "S-W", "West", "N-W"],
-		    name: "< 5 m/s",
-		    marker: {color: "rgb(242,240,247)"},
-			type: "barpolar"
-		  }]
-		*/
-		layout = {
-		    font: {size: 16},
-			legend: {font: {size: 16}},
+	layout = {
+		    font: {size: 12},
+			legend: {font: {size: 12}},
 			color: '#dfdfdf',
 		    polar: {
-		      barmode: "overlay",
-		      bargap: 0,
-		      radialaxis: {ticksuffix: "%", angle: 45, dtick: 20},
-		      angularaxis: {direction: "clockwise"}
+		    	barmode: "overlay",
+		    	bargap: 10,
+		    	//radialaxis: {ticksuffix: "%", angle: 45, dtick: 20},
+		    	//angularaxis: {direction: "clockwise"}
 			},
 			title: {
-				text:'Wind Direction [Wind Rose Chart]: x days',
+				text:'Wind Direction Chart: Today',
 				font: {
 				  family: 'Courier New, monospace',
-				  size: 24,
+				  size: 18,
 				  color: '#dfdfdf'
 				}
 			},
@@ -310,8 +319,8 @@ function processRequest(e) {
 		  }
 	  
 		graphDiv = document.getElementById('wind-direction-plot');
-		Plotly.newPlot(graphDiv, windDataFullSet, layout)
-	}
+		Plotly.newPlot(graphDiv, windDataSet, layout)
+		}	
 
 
 		/* PRESSURE */
@@ -406,12 +415,40 @@ function processRequest(e) {
 			plot_fgcolor: plotFgColor
 		};
 		Plotly.newPlot(graphDiv, data, layout);
+		}
 	}
-
-
-    }
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* -----------------------------------------------------*/
+/* -----------------------------------------------------*/
+/* -----------------------------------------------------*/
+/* -----------------------------------------------------*/
 
 /* TEMPERATURE */
 graphDiv = document.getElementById('temperature-plot');
@@ -556,9 +593,4 @@ layout = {
 
 graphDiv = document.getElementById('wind-direction-plot');
 Plotly.newPlot(graphDiv, data, layout)
-
-
-
-
-
 
