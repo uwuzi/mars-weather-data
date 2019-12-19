@@ -2,8 +2,8 @@
 #include <fstream>
 #include <string>
 #include <curl/curl.h>
-#include <nlohmann/json.hpp>
-#include "sol.h"
+#include "json.hpp"
+#include "sol.hpp"
 
 using namespace nlohmann;
 
