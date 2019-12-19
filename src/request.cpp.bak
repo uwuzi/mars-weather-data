@@ -40,7 +40,7 @@ size_t curlCallbackFuncToString(void *contents, size_t size, size_t nmemb, std::
     return newLength;
 }
 
-std::string makeRequest(std::string httpsUrl)
+std::string makeRequest(std::string& httpsUrl)
 {
   CURL *curl;
   CURLcode res;
@@ -142,56 +142,23 @@ void outputJsonToFile(json& JSO, std::vector<std::string>& sol, const char* outF
     outStream.close();
 }
 
-int jsonRead(nlohmann::json& JSO, const char* fileName) {
-    std::ifstream inStream(fileName, std::ios::in | std::ios::ate);
-    if (inStream.is_open()) {
-        std::ifstream::pos_type fileSize = inStream.tellg();
-        inStream.seekg(0, std::ios::beg);
-        std::vector<char> bytes(fileSize);
-        inStream.read(bytes.data(), fileSize);
-        inStream.close();
-        JSO = json::parse(std::string(bytes.data(), fileSize));
-        return 0;
-    }
-    return -1;
-}
-
-int jsonCat(nlohmann::json& dest, const nlohmann::json& src, const std::string& key) {
-    if (!src.is_null()){
-        dest[key] = src[key];
-        return 0;
-    }
-    return -1;
-}
-
-
-
-std::string resolveRequestURL() {
-    return "https://api.nasa.gov/insight_weather/?api_key=" + readApiKey() + "&feedtype=json&ver=1.0";
-}
-
-nlohmann::json updateJson(const char* oldJsonFile, nlohmann::json& requestJSO, std::vector<std::string>& sol) {
-    nlohmann::json readJSO;
-    jsonRead(readJSO, oldJsonFile);
-    json newJson;
-    newJson[sol.back()] = requestJSO[sol.back()];
-    jsonCat(readJSO,newJson,sol.back());
-    return readJSO;
-}
 
 
 int main (int argc, char* argv[]) 
 {
-    const char* jsonFilePath = "../data/data.json";
-    json requestJSO = json::parse(makeRequest(resolveRequestURL()));
-    std::vector<std::string> sol = requestJSO["sol_keys"];
-    std::cout << updateJson(jsonFilePath, requestJSO, sol);
-    return 0;
-
-#define PROCESS_DATA 0
-#if PROCESS_DATA
-    unsigned short requestCount;
     std::vector<Sol*> solVec;
+
+    unsigned short requestCount;
+    std::string apiKey = readApiKey();
+    std::string httpRequestURL = "https://api.nasa.gov/insight_weather/?api_key=" + apiKey + "&feedtype=json&ver=1.0";
+    std::string jsonString;
+
+    jsonString = makeRequest(httpRequestURL);
+
+    json JSO = json::parse(jsonString);
+
+    std::vector<std::string> sol = JSO["sol_keys"];
+
     for (int i = 0; i < sol.size(); i++) {
         Sol *tmp = new Sol();
         std::string key = sol.at(i);
@@ -231,8 +198,11 @@ int main (int argc, char* argv[])
         tmp->print(key);
         solVec.push_back(tmp);
     }
+
+    //readDetailedWindData(JSO, sol);
+    //outputInitialJsonToFile(JSO, sol, "./out.json");
+    outputJsonToFile(JSO, sol, "./out.json");
     return 0;
-#endif
 }
 
 

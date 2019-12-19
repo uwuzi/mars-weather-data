@@ -21,30 +21,6 @@ var plotAxisFont = {family: 'Courier New, monospace', size: 16, color: '#dfdfdf'
 
 /* Wind Rose Diagram Colorscheme */
 /* Partially generated with #aada2c @ https://mycolor.space/?hex=%23AADA2C&sub=1 */
-/*
-	"#d0d0d0",
-	"#66AA11",
-	"#c47f2c",
-	"#30309b",
-	"#7e40a5",
-	"#3579A8",
-	"#9999AA",
-	"#303030",
-	"#ff0090",
-	"#80FF00",
-	"#ffba68",
-	"#5f5fee",
-	"#bb88dd",
-	"#4eb4fa",
-	"#ffffff"
-	"#aada2c",
-	"#454839",
-	"#a9ad9b",
-	"#00d0f2",
-	"#0097b9",
-	"#ab2969",
-	"#fcfcd4"
-	*/
 var WRColors = [
 	"#DBF0A8",
 	"#D4ED97",
@@ -65,6 +41,22 @@ var WRColors = [
 
 ];
 
+function callback(response) {
+	var jso = JSON.parse(response);
+	console.log(jso);
+	//console.log(response);
+}
+function readTextFile(file, callback) {
+    var rawFile = new XMLHttpRequest();
+    rawFile.overrideMimeType("application/json");
+    rawFile.open("GET", file, true);
+    rawFile.onreadystatechange = function() {
+        if (rawFile.readyState === 4 && rawFile.status == "200") {
+            callback(rawFile.responseText);
+        }
+    }
+    rawFile.send(null);
+}
 
 function processRequest(e) {
     if (xhr.readyState == 4 && xhr.status == 200) {
@@ -479,10 +471,19 @@ function processRequest(e) {
 	}
 }
 
+readTextFile("http://www.uwuzi.com/data/data.json", callback);
+
+
+
+
+
+
+
 /* -----------------------------------------------------*/
 /* -------------------- DUMMY --------------------------*/
 /* -------------------- PLOTS ---------------------------*/
 /* -----------------------------------------------------*/
+{
 /* TEMPERATURE */
 graphDiv = document.getElementById('temperature-plot');
 data = [{
@@ -571,3 +572,4 @@ layout = {
   }
 graphDiv = document.getElementById('wind-direction-plot');
 Plotly.newPlot(graphDiv, data, layout)
+}
