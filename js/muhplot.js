@@ -1,21 +1,3 @@
-// GET JSON FROM HTTP REQUEST
-/*
-var theUrl = "https://api.nasa.gov/insight_weather/?api_key=c3RFS78h4rzwJOM0y6fSoo4CBWgiIw32DajxPtpa&feedtype=json&ver=1.0";
-var xhr = new XMLHttpRequest();
-xhr.open('GET', theUrl, true);
-xhr.send();
-xhr.addEventListener("readystatechange", processRequest, false);
-*/
-var graphDiv;
-var data;
-var min;
-var max;
-var avg;
-var x_data = [];
-var ymax_data = [];
-var yavg_data = [];
-var ymin_data = [];
-
 /* Line Graph Colorscheme*/
 var paperBgColor = "rgba(255,255,255,0)";
 var paperFgColor= "rgba(223,223,223,1)";
@@ -46,164 +28,197 @@ var WRColors = [
 
 ];
 
+var date = new Date();
+var dateStr = (date.getMonth()+1)+'/'+date.getDate()+'/'+date.getFullYear();
+var graphDiv;
+var data;
+var min;
+var max;
+var avg;
+var x_data = [];
+var ymax_data = [];
+var yavg_data = [];
+var ymin_data = [];
 
+// Layouts
+{
+var temperatureLayout= {
+	title: {
+		text:'Temperature vs Time',
+		font: plotTitleFont
+	},
+  	xaxis: {
+    	title: {
+			text: 'Martian Sol (Day) # ',
+			font : plotAxisFont
+		},
+		name: 'Avg',
+		color: '#dfdfdf',
+    	showgrid: true,
+    	zeroline: true
+  	},
+  	yaxis: {
+  	  	title: {
+			text: 'Temp (F)',
+			font: plotAxisFont
+		},
+		color: '#dfdfdf',
+  	  	showline: false
+	},
+	paper_bgcolor: paperBgColor,
+	plot_bgcolor: plotBgColor,
+	paper_fgcolor: paperFgColor,
+	plot_fgcolor: plotFgColor
+};
+
+var windSpeedlayout = {
+	title: {
+		text:'Wind Speed vs Time',
+		font: {
+		  family: 'Courier New, monospace',
+		  size: 24,
+		  color: '#dfdfdf'
+		}
+	},
+  	xaxis: {
+    	title: {
+			text: 'Martian Sol (Day) # ',
+			font : plotAxisFont
+		},
+		color: '#dfdfdf',
+    	showgrid: true,
+    	zeroline: true
+  	},
+  	yaxis: {
+    	title: {
+			text: 'Horizontal Wind Speed (m/s)',
+			font : plotAxisFont
+		},
+		color: '#dfdfdf',
+  	  	showline: false
+	},
+	paper_bgcolor: paperBgColor,
+	plot_bgcolor: plotBgColor,
+	paper_fgcolor: paperFgColor,
+	plot_fgcolor: plotFgColor
+};
+var windDirectionRoseLayout = {
+	font: plotAxisFont,
+	color: '#00ffff',
+	showlegend: false,
+    polar: {
+		color: '#00ffff',
+    	barmode: "overlay",
+    	bargap: 10,
+    	radialaxis: {
+			showradialaxis: false,
+			ticksuffix: "%", angle: 0, dtick: 0,
+			color: "#dfdfdf00"
+		},
+    	angularaxis: {
+			color: '#dfdfdf',
+			direction: "clockwise",
+		}
+	},
+	title: {
+		text:'Wind Direction Chart: '+ dateStr,
+		font: {
+		  family: 'Courier New, monospace',
+		  size: 18,
+		  color: '#dfdfdf'
+		}
+	},
+	paper_bgcolor: paperBgColor, 
+	plot_bgcolor: plotBgColor,
+	paper_fgcolor: paperFgColor,
+	plot_fgcolor: plotFgColor
+}
+
+var windDirectionBarLayout = {
+	title: {
+		text:'Wind vs Pressure',
+		font: {
+		  family: 'Courier New, monospace',
+		  size: 18,
+		  color: '#dfdfdf'
+		}
+	},
+	xaxis: {
+    	title: {
+			text: 'Atm. Pressure (Pa)',
+			font : plotAxisFont
+		},
+		name: 'Avg',
+		color: '#dfdfdf',
+    	showgrid: true,
+    	zeroline: true
+	  },
+	yaxis: {
+    	title: {
+			text: 'Wind Speed (m/s)',
+			font : plotAxisFont
+		},
+		name: 'Avg',
+		color: '#dfdfdf',
+    	showgrid: true,
+    	zeroline: true
+  	},
+	barmode: 'stack',
+	paper_bgcolor: paperBgColor, 
+	plot_bgcolor: plotBgColor,
+	paper_fgcolor: paperFgColor,
+	plot_fgcolor: plotFgColor
+}
+
+var pressureLayout = {
+	title: {
+		text:'Air Pressure vs Time',
+		font: {
+		  family: 'Courier New, monospace',
+		  size: 24,
+		  color: '#dfdfdf'
+		}
+	},
+  	xaxis: {
+    	title: {
+			text: 'Martian Sol (Day) # ',
+			font : plotAxisFont
+		},
+		color: '#dfdfdf',
+    	showgrid: true,
+    	zeroline: true
+  	},
+  	yaxis: {
+    	title: {
+			title: 'Air Pressure (Pa)',
+			font : plotAxisFont
+		},
+		color: '#dfdfdf',
+  	  	showline: false
+	},
+	paper_bgcolor: paperBgColor,
+	plot_bgcolor: plotBgColor,
+	paper_fgcolor: paperFgColor,
+	plot_fgcolor: plotFgColor
+};
+}
+
+
+function dateFromUTCString(s) {
+	s = s.split(/[-T:Z]/ig);
+	return new Date(Date.UTC(s[0], --s[1], s[2], s[3], s[4], s[5]));
+}
 
 
 function callback(response) {
 	var JSO = JSON.parse(response);
 	var solNum = Object.keys(JSO);
 
+	var firstUTC = JSO[solNum[0]].Last_UTC;
+	var lastUTC = JSO[solNum[solNum.length-1]].Last_UTC;
 
-	// Layouts
-	{
-	var temperatureLayout= {
-		title: {
-			text:'Temperature Data: x days',
-			font: plotTitleFont
-		},
-	  	xaxis: {
-	    	title: {
-				text: 'Martian Sol (Day) # ',
-				font : plotAxisFont
-			},
-			name: 'Avg',
-			color: '#dfdfdf',
-	    	showgrid: true,
-	    	zeroline: true
-	  	},
-	  	yaxis: {
-	  	  	title: {
-				text: 'Temp (F)',
-				font: plotAxisFont
-			},
-			color: '#dfdfdf',
-	  	  	showline: false
-		},
-		paper_bgcolor: paperBgColor,
-		plot_bgcolor: plotBgColor,
-		paper_fgcolor: paperFgColor,
-		plot_fgcolor: plotFgColor
-	};
-
-	var windSpeedlayout = {
-		title: {
-			text:'Wind Speed Data: x days',
-			font: {
-			  family: 'Courier New, monospace',
-			  size: 24,
-			  color: '#dfdfdf'
-			}
-		},
-	  	xaxis: {
-			title: 'Martian Sol (Day) # ',
-			color: '#dfdfdf',
-	    	showgrid: true,
-	    	zeroline: true
-	  	},
-	  	yaxis: {
-			title: 'Horizontal Wind Speed (m/s)',
-			color: '#dfdfdf',
-	  	  	showline: false
-		},
-		paper_bgcolor: paperBgColor,
-		plot_bgcolor: plotBgColor,
-		paper_fgcolor: paperFgColor,
-		plot_fgcolor: plotFgColor
-	};
-	var windDirectionRoseLayout = {
-	    font: {size: 12},
-		color: '#dfdfdf',
-		showlegend: false,
-	    polar: {
-	    	barmode: "overlay",
-	    	bargap: 10,
-	    	radialaxis: {
-				showradialaxis: false,
-				ticksuffix: "%", angle: 0, dtick: 0,
-				color: "#dfdfdf00"
-			},
-	    	angularaxis: {
-				color: '#dfdfdf',
-				direction: "clockwise",
-			}
-		},
-		title: {
-			text:'Wind Direction Chart: Today',
-			font: {
-			  family: 'Courier New, monospace',
-			  size: 18,
-			  color: '#dfdfdf'
-			}
-		},
-		paper_bgcolor: paperBgColor, 
-		plot_bgcolor: plotBgColor,
-		paper_fgcolor: paperFgColor,
-		plot_fgcolor: plotFgColor
-	}
-
-	var windDirectionBarLayout = {
-		title: {
-			text:'Wind Direction Chart: Today',
-			font: {
-			  family: 'Courier New, monospace',
-			  size: 18,
-			  color: '#dfdfdf'
-			}
-		},
-		xaxis: {
-	    	title: {
-				text: 'Martian Sol (Day) # ',
-				font : plotAxisFont
-			},
-			name: 'Avg',
-			color: '#dfdfdf',
-	    	showgrid: true,
-	    	zeroline: true
-		  },
-		yaxis: {
-	    	title: {
-				text: '# ',
-				font : plotAxisFont
-			},
-			name: 'Avg',
-			color: '#dfdfdf',
-	    	showgrid: true,
-	    	zeroline: true
-	  	},
-		barmode: 'stack',
-		paper_bgcolor: paperBgColor, 
-		plot_bgcolor: plotBgColor,
-		paper_fgcolor: paperFgColor,
-		plot_fgcolor: plotFgColor
-	}
-
-	var pressureLayout = {
-		title: {
-			text:'Air Pressure Data: x days',
-			font: {
-			  family: 'Courier New, monospace',
-			  size: 24,
-			  color: '#dfdfdf'
-			}
-		},
-	  	xaxis: {
-			title: 'Martian Sol (Day) # ',
-			color: '#dfdfdf',
-	    	showgrid: true,
-	    	zeroline: true
-	  	},
-	  	yaxis: {
-			title: 'Air Pressure (Pa)',
-			color: '#dfdfdf',
-	  	  	showline: false
-		},
-		paper_bgcolor: paperBgColor,
-		plot_bgcolor: plotBgColor,
-		paper_fgcolor: paperFgColor,
-		plot_fgcolor: plotFgColor
-	};
-	}
-
+	document.getElementById("first-data-footer").innerHTML = "First data recorded: "+ dateFromUTCString(firstUTC);
+	document.getElementById("last-data-footer").innerHTML = "Last data recorded: "+ dateFromUTCString(lastUTC);
 
 	// TEMPERATURE
 	for (var i = 0; i < solNum.length; i++) {
@@ -217,24 +232,24 @@ function callback(response) {
 			y: yavg_data,
 			type: 'scatter',
 			name: 'Avg',
-			marker: {color:'#8cd5ff'},
-			line: {color:'#d1ff82',width:2}
+			marker: {color:'#fafafa',size:10},
+			line: {color:'#d1ff82',width:4}
 		};
 	min = {
 			x: x_data,
 			y: ymin_data,
 			type: 'scatter',
 			name: 'Min',
-			marker: {color:'#8cd5ff'},
-			line: {color:'#ff8c82',width:2}
+			marker: {color:'#fafafa',size:10},
+			line: {color:'#ff8c82',width:4}
 		};
 	max = {
 			x: x_data,
 			y: ymax_data,
 			type: 'scatter',
 			name: 'Max',
-			marker: {color:'#8cd5ff'},
-			line: {color:'#e4c6fa',width:2}
+			marker: {color:'#fafafa',size:10},
+			line: {color:'#e4c6fa',width:4}
 		};
 	var data = [max, avg, min];
 	graphDiv = document.getElementById('temperature-plot');
@@ -256,24 +271,24 @@ function callback(response) {
 			y: yavg_data,
 			type: 'scatter',
 			name: 'Avg',
-			marker: {color:'#8cd5ff'},
-			line: {color:'#d1ff82',width:2}
+			marker: {color:'#fafafa',size:10},
+			line: {color:'#d1ff82',width:4}
 		};
 	min = {
 			x: x_data,
 			y: ymin_data,
 			type: 'scatter',
 			name: 'Min',
-			marker: {color:'#8cd5ff'},
-			line: {color:'#ff8c82',width:2}
+			marker: {color:'#fafafa',size:10},
+			line: {color:'#ff8c82',width:4}
 		};
 	max = {
 			x: x_data,
 			y: ymax_data,
 			type: 'scatter',
 			name: 'Max',
-			marker: {color:'#8cd5ff'},
-			line: {color:'#e4c6fa',width:2}
+			marker: {color:'#fafafa',size:10},
+			line: {color:'#e4c6fa',width:4}
 		};
 	data = [max, avg, min];
 	graphDiv = document.getElementById('wind-speed-plot');
@@ -306,24 +321,56 @@ function callback(response) {
 	Plotly.newPlot(graphDiv, windRoseDataSet, windDirectionRoseLayout);
 	}	
 
-	//WIND DIRECTION BAR GRAPH 
-	var trace1 = {
-		x: [20, 14, 23],
-		y: ['giraffes', 'orangutans', 'monkeys'],
-		name: 'SF Zoo',
-		type: 'bar',
-		orientation: 'h',
+
+
+	// PRESSURE VS WIND/TEMP
+	var pressureData = [];
+	var windData = [];
+	/*
+	var pressureDataMax = [];
+	var pressureDataMin = [];
+	var windDataMax = [];
+	var windDataMin = [];
+	*/
+	data = [];
+	for(var i = 0; i < solNum.length; i++) {
+		pressureData.push(JSO[solNum[i]].PRE.av);
+		windData.push(JSO[solNum[i]].HWS.av);
+		/*
+		pressureDataMax.push(JSO[solNum[i]].PRE.mx);
+		pressureDataMin.push(JSO[solNum[i]].PRE.mn);
+		windDataMax.push(JSO[solNum[i]].HWS.mx);
+		windDataMin.push(JSO[solNum[i]].HWS.mn);
+		*/
+	}
+	var preVsWind = {
+		x: pressureData,
+		y: windData,
+		name: 'Average',
+		type: 'scatter',
+		marker: { size: 12, color: "#fafafa" },
+		line: {width: 4, color: "#d1ff82"}
 	};
-	var trace2 = {
-		x: [12, 18, 29],
-		y: ['giraffes', 'orangutans', 'monkeys'],
-		name: 'LA Zoo',
-		type: 'bar',
-		orientation: 'h',
-	};
-	data = [
-		trace1, trace2
-	];
+	/*
+	var preVsWindMin = {
+		x: pressureDataMin,
+		y: windDataMin,
+		name: 'Min',
+		type: 'scatter',
+		marker: { size: 12, color: "#fafafa" },
+		line: {width: 4, color: "#ff8c82"}
+	}
+	var preVsWindMax = {
+		x: pressureDataMax,
+		y: windDataMax,
+		name: 'Max',
+		type: 'scatter',
+		marker: { size: 12, color: "#fafafa" },
+		line: {width: 4, color: "#e4c6fa"}
+	}
+	*/
+	//data = [preVsWind, preVsWindMax, preVsWindMin];
+	data = [preVsWind];
 	Plotly.newPlot('wind-direction-bar', data, windDirectionBarLayout);
 
 	// PRESSURE 
@@ -342,24 +389,24 @@ function callback(response) {
 			y: yavg_data,
 			type: 'scatter',
 			name: 'Avg',
-			marker: {color:'#8cd5ff'},
-			line: {color:'#d1ff82',width:2}
+			marker: {color:'#fafafa',size: 10},
+			line: {color:'#d1ff82',width:4}
 		};
 	min = {
 			x: x_data,
 			y: ymin_data,
 			type: 'scatter',
 			name: 'Min',
-			marker: {color:'#8cd5ff'},
-			line: {color:'#ff8c82',width:2}
+			marker: {color:'#fafafa',size: 10},
+			line: {color:'#ff8c82',width:4}
 		};
 	max = {
 			x: x_data,
 			y: ymax_data,
 			type: 'scatter',
 			name: 'Max',
-			marker: {color:'#8cd5ff'},
-			line: {color:'#e4c6fa',width:2}
+			marker: {color:'#fafafa',size: 10},
+			line: {color:'#e4c6fa',width:4}
 		};
 	data = [max, avg, min];
 	graphDiv = document.getElementById('pressure-plot');

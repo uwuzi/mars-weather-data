@@ -7,15 +7,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/mycss.css">
 </head>
 
 <body>
+
     <!--NAVBAR-->
     <div class="navbar">
             <ul>
                     <li><a href="mars.html">Mars Weather Data</a></li>
-                    <li><a href="http://data.uwuzi.com" target="_blank">View JSON Data</a></li>
+                    <li><a href="http://data.uwuzi.com" target="_blank">View Mars JSON</a></li>
                     <li><a href="alg.html">Algorithm Art</a></li>
                     <li><a href="http://grhm.xyz">My Website</a></li>
             </ul> 
@@ -26,8 +27,9 @@
         <h1>Daily Mars Weather Data</h1>
         <h3><a href="https://github.com/uwuzi/nasa-mars-data" target="_blank">GitHub page</a></h3>
         <p><strong>Data is obtained from NASA's Insight Mission API. Measurements are taken once daily, but the data available is limited to the past week (7 Martian "Sols" aka days).</strong></p>
-        <p><strong>I want to document the history of the weather data, so I will be storing it and plotting it here. I hope to keep adding as long as they continue to make it available. I started on December 16th, 2019.</strong></p>
-		<p><strong>You can view the raw JSON data from the navbar button above or at <a href="http://data.uwuzi.com" target="_blank">data.uwuzi.com</a></strong></p>
+        <p><strong>I want to document the history of the weather data, so I will be storing it and plotting it here. I hope to keep adding as long as they continue to make it available. The data starts with December 9th, 2019 (Sol 368).</strong></p>
+        <p><strong>You can view the raw JSON data from the navbar button above or at <a href="http://data.uwuzi.com" target="_blank">data.uwuzi.com</a>.</strong></p>
+        <p><strong>Or run: $curl www.uwuzi.com/data/data.json</strong></p>
     </div>
 
     <br>
@@ -65,9 +67,14 @@
         <div id="pressure-plot" style="width:auto;height:500;"></div>
     </div>
 
-
-
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script type = "text/javascript" src = "../js/muhplot.js" ></script>
 </body>
+
+<footer>
+    <br>
+    <div><p id="first-data-footer"></p></strong></p></div>
+    <div><p id="last-data-footer"></p></strong></p></div>
+</footer>
+
 </html>
