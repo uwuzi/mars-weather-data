@@ -1,6 +1,9 @@
 ## Mars Weather Tracking  
 Website: [www.uwuzi.com](http://www.uwuzi.com)  
-JSON data: [data.uwuzi.com](http://data.uwuzi.com)  
+You can visite [data.uwuzi.com](http://data.uwuzi.com), or run:  
+
+    $curl www.uwuzi.com/data/data.json  
+to see the latest JSON data. 
 
 This project obtains Mars weather data from Nasa's Insight Mission API, records it, and plots it on my website.  
 
