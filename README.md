@@ -5,7 +5,7 @@ This project obtains Mars weather data from Nasa's Insight Mission API, records 
 Website: [www.uwuzi.com](http://www.uwuzi.com)  
 Latest JSON data (to the hour) at [data.uwuzi.com](http://data.uwuzi.com), or you can run:  
 
-    $curl www.uwuzi.com/data/data.json  
+    $curl -L data.uwuzi.com  
     
 The data provided by NASA is limited to the past week. However, I wanted to record the history of the weather data, so a few times per day I append the old data with the updated data. I started on December 16th, 2019, and hope to continue as long as their API is functional!
 
