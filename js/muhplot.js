@@ -6,6 +6,8 @@ var plotFgColor = "rgba(223,223,223,1)";
 var plotTitleFont = {family: 'Courier New, monospace', size: 24, color: '#dfdfdf'};
 var plotAxisFont = {family: 'Courier New, monospace', size: 16, color: '#dfdfdf'};
 
+
+
 /* Wind Rose Diagram Colorscheme */
 /* Partially generated with #aada2c @ https://mycolor.space/?hex=%23AADA2C&sub=1 */
 var WRColors = [
@@ -44,7 +46,7 @@ var ymin_data = [];
 {
 var temperatureLayout= {
 	title: {
-		text:'Temperature vs Time',
+		text:'Temperature vs Time (avg)',
 		font: plotTitleFont
 	},
   	xaxis: {
@@ -73,7 +75,7 @@ var temperatureLayout= {
 
 var windSpeedlayout = {
 	title: {
-		text:'Wind Speed vs Time',
+		text:'Wind Speed vs Time (avg)',
 		font: {
 		  family: 'Courier New, monospace',
 		  size: 24,
@@ -163,7 +165,6 @@ var windDirectionBarLayout = {
     	showgrid: true,
     	zeroline: true
   	},
-	barmode: 'stack',
 	paper_bgcolor: paperBgColor, 
 	plot_bgcolor: plotBgColor,
 	paper_fgcolor: paperFgColor,
@@ -172,7 +173,7 @@ var windDirectionBarLayout = {
 
 var pressureLayout = {
 	title: {
-		text:'Air Pressure vs Time',
+		text:'Pressure vs Time (avg)',
 		font: {
 		  family: 'Courier New, monospace',
 		  size: 24,
@@ -190,11 +191,11 @@ var pressureLayout = {
   	},
   	yaxis: {
     	title: {
-			title: 'Air Pressure (Pa)',
+			title: 'Pressure (Pa)',
 			font : plotAxisFont
 		},
 		color: '#dfdfdf',
-  	  	showline: false
+  	  	//showline: false
 	},
 	paper_bgcolor: paperBgColor,
 	plot_bgcolor: plotBgColor,
@@ -219,6 +220,23 @@ function callback(response) {
 
 	document.getElementById("first-data-footer").innerHTML = "First data recorded: "+ dateFromUTCString(firstUTC);
 	document.getElementById("last-data-footer").innerHTML = "Last data recorded: "+ dateFromUTCString(lastUTC);
+
+	// GET MIN && MAX INFO
+	var todaysMaxTemp = JSO[solNum[solNum.length-1]].AT.mx;
+	var todaysMinTemp = JSO[solNum[solNum.length-1]].AT.mn;
+	var temperatureInfoHtml = "<h3>Today</h3><p><strong>Max: "+todaysMaxTemp.toFixed(3)+" F<br>Min: "+todaysMinTemp.toFixed(3)+" F</strong></p>";
+	document.getElementById('temperature-info').innerHTML = temperatureInfoHtml;
+
+	var todaysMaxWind = JSO[solNum[solNum.length-1]].HWS.mx;
+	var todaysMinWind = JSO[solNum[solNum.length-1]].HWS.mn;
+	var windSpeedInfoHtml = "<h3>Today</h3><p><strong>Max: "+todaysMaxWind.toFixed(3)+" m/s<br>Min: "+todaysMinWind.toFixed(3)+" m/s</strong></p>";
+	document.getElementById('wind-speed-info').innerHTML = windSpeedInfoHtml;
+
+	var todaysMaxPressure = JSO[solNum[solNum.length-1]].PRE.mx;
+	var todaysMinPressure = JSO[solNum[solNum.length-1]].PRE.mn;
+	var pressureInfoHtml = "<h3>Today</h3><p><strong>Max: "+todaysMaxPressure.toFixed(3)+" Pa<br>Min: "+todaysMinPressure.toFixed(3)+" Pa</strong></p>";
+	document.getElementById('pressure-info').innerHTML = pressureInfoHtml;
+
 
 	// TEMPERATURE
 	for (var i = 0; i < solNum.length; i++) {
@@ -251,7 +269,8 @@ function callback(response) {
 			marker: {color:'#fafafa',size:10},
 			line: {color:'#e4c6fa',width:4}
 		};
-	var data = [max, avg, min];
+	//var data = [max, avg, min];
+	var data = [avg];
 	graphDiv = document.getElementById('temperature-plot');
 	Plotly.newPlot(graphDiv, data, temperatureLayout);
 
@@ -290,7 +309,8 @@ function callback(response) {
 			marker: {color:'#fafafa',size:10},
 			line: {color:'#e4c6fa',width:4}
 		};
-	data = [max, avg, min];
+	//data = [max, avg, min];
+	data = [avg];
 	graphDiv = document.getElementById('wind-speed-plot');
 	Plotly.newPlot(graphDiv, data, windSpeedlayout);
 
@@ -348,8 +368,9 @@ function callback(response) {
 		y: windData,
 		name: 'Average',
 		type: 'scatter',
-		marker: { size: 12, color: "#fafafa" },
-		line: {width: 4, color: "#d1ff82"}
+		mode: 'markers',
+		marker: { size: 12, color: "#d1ff82" },
+		//line: {width: 4, color: "#d1ff82"}
 	};
 	/*
 	var preVsWindMin = {
@@ -408,7 +429,8 @@ function callback(response) {
 			marker: {color:'#fafafa',size: 10},
 			line: {color:'#e4c6fa',width:4}
 		};
-	data = [max, avg, min];
+	//data = [max, avg, min];
+	data = [avg];
 	graphDiv = document.getElementById('pressure-plot');
 	Plotly.newPlot(graphDiv, data, pressureLayout);
 }

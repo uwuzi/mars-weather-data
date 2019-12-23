@@ -58,29 +58,80 @@ body{
 .plot-div {
     margin:0 16px;
     background-color: #262626;
-    color: #dfdfdf;
+	color: #dfdfdf;
+	width:100%;
+	height:auto;
+	display:inline-block;
 }
 #temperature-plot {
+	width: 85%;
+	height: 500px;
     background-color: #262626;
-    color: #dfdfdf;
+	color: #dfdfdf;
+	float: left;
+}
+#temperature-info {
+	position: relative;
+	padding-top:80px;
+	width: 15%;
+	height: 500px;
+    background-color: #262626;
+	color: #dfdfdf;
+	float: right;
+}
+#temperature-info h3 {
+	text-decoration: underline;
 }
 #wind-speed-plot {
+	width:85%;
+    height:500px;
     background-color: #262626;
-    color: #dfdfdf;
+	color: #dfdfdf;
+	float: left;
+}
+#wind-speed-info {
+	position: relative;
+	padding-top:80px;
+	width: 15%;
+	height: 500px;
+    background-color: #262626;
+	color: #dfdfdf;
+	float: right;
 }
 #wind-direction-plot{
+	width:40%;
     height:500px;
     float: left;
     background-color: #262626;
     color: #dfdfdf;
 }
+#wind-speed-info h3 {
+	text-decoration: underline;
+}
 #wind-direction-bar {
+	width:60%;
     height:500px;
     float:right;
     background-color: #262626;
     color: #dfdfdf;
 }
-
-
-
+#pressure-plot {
+	width:85%;
+    height:500px;
+    background-color: #262626;
+	color: #dfdfdf;
+	float: left;
+}
+#pressure-info {
+	position: relative;
+	padding-top:80px;
+	width: 15%;
+	height: 500px;
+    background-color: #262626;
+	color: #dfdfdf;
+	float: right;
+}
+#pressure-info h3 {
+	text-decoration: underline;
+}
 

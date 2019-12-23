@@ -2,12 +2,14 @@
 <html>
 
 <head>
-    <title>uwuzi.com - Michael Graham's Project Site</title>
+    <title>uwuzi.com - Mars Weather Tracking</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="keywords" content="HTML, CSS, XML, XHTML, JavaScript, mars, nasa, api, uwuzi, uwuzi.com, michael graham, michael, graham, data, json, weather, weather tracking, javascript, c++, history, project, plot, graph, plotly, tracking">
+    <meta name="description" content="Tracking and logging Mars weather data obtained from daily NASA updates.">
+	<meta name="author" content="Michael Graham">
     <link rel="stylesheet" href="../css/mycss.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <body>
@@ -26,10 +28,10 @@
     <div class="info">
         <h1>Daily Mars Weather Data</h1>
         <h3><a href="https://github.com/uwuzi/nasa-mars-data" target="_blank">GitHub page</a></h3>
-        <p><strong>Data is obtained from NASA's Insight Mission API. Measurements are taken once daily, but the data available is limited to the past week (7 Martian "Sols" aka days).</strong></p>
+        <p><strong>Data is obtained from NASA's Insight Mission API. Measurements are taken once daily, but the data available is limited to the past week (a Martian "Sol" = an Earth day).</strong></p>
         <p><strong>I want to document the history of the weather data, so I will be storing it and plotting it here. I hope to keep adding as long as they continue to make it available. The data starts with December 9th, 2019 (Sol 368).</strong></p>
         <p><strong>You can view the raw JSON data from the navbar button above or at <a href="http://data.uwuzi.com" target="_blank">data.uwuzi.com</a>.</strong></p>
-        <p><strong>Or run: $curl www.uwuzi.com/data/data.json</strong></p>
+        <p><strong>Or run: $curl -L data.uwuzi.com</strong></p>
     </div>
 
     <br>
@@ -39,8 +41,8 @@
     <!--TEMPERATURE PLOT-->
     <div class="plot-div">
         <h1>Temperature</h1>
-            <div id="temperature-plot" style="width:auto;height:500;">
-        </div>
+        <div id="temperature-plot"></div>
+		<div id="temperature-info"></div>
     </div>
 
     <br>
@@ -50,11 +52,12 @@
     <!--WIND PLOTS-->
     <div class="plot-div">
         <h1>Wind Speed & Direction</h1>
-        <div id="wind-speed-plot" style="width:auto;height:500;"></div>
+        <div id="wind-speed-plot"></div>
+		<div id="wind-speed-info"></div>
     </div>
     <div class="plot-div">
-        <div id="wind-direction-plot" style="width:50%;height:500;"></div>
-        <div id="wind-direction-bar" style="width:50%;height:500;"></div>
+        <div id="wind-direction-plot"></div>
+        <div id="wind-direction-bar"></div>
     </div>
 
     <br>
@@ -63,8 +66,9 @@
 
     <!--PRESSURE PLOT-->
     <div class="plot-div">
-        <h1>Air Pressure</h1>
-        <div id="pressure-plot" style="width:auto;height:500;"></div>
+        <h1>Atmospheric Pressure</h1>
+        <div id="pressure-plot"></div>
+		<div id="pressure-info"></div>
     </div>
 
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
