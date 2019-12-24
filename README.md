@@ -7,7 +7,7 @@ Latest JSON data (to the hour) at [data.uwuzi.com](http://data.uwuzi.com), or yo
 
     $curl -L data.uwuzi.com  
     
-The data provided by NASA is limited to the past week. However, I wanted to record the history of the weather data, so a few times per day I append the old data with the updated data. I started on December 16th, 2019, and hope to continue as long as their API is functional!
+The data provided by NASA is limited to the past week. However, I wanted to record the history of the weather data, so a few times per day I append the old data with the updated data. I started on December 9th, 2019, and hope to continue as long as their API is functional!
 
 I wrote a C++ program that uses libcurl and [nlohmann's JSON library](https://github.com/nlohmann/json) to make an http request for the JSON data, read the data that is currently stored on my site, and append it with any changes.  
 It is then plotted with the Plotly Javascript library.  
