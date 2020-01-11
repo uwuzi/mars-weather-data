@@ -2,7 +2,7 @@
 
 This project obtains Mars weather data from Nasa's Insight Mission API, records it, and plots it on my website.  
 
-Website: [www.uwuzi.com](http://www.uwuzi.com)  
+Website: [www.uwuzi.com](http://www.uwuzi.com). If the website is down, I either had a power/internet outage or tripped over the power cord.  
 Latest JSON data (to the hour) at [data.uwuzi.com](http://data.uwuzi.com), or you can run:  
 
     $curl -L data.uwuzi.com  
