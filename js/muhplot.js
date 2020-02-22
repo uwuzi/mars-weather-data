@@ -269,10 +269,10 @@ function callback(response) {
 			marker: {color:'#fafafa',size:10},
 			line: {color:'#e4c6fa',width:4}
 		};
-	//var data = [max, avg, min];
 	var data = [avg];
 	graphDiv = document.getElementById('temperature-plot');
 	Plotly.newPlot(graphDiv, data, temperatureLayout);
+
 
 	// WIND SPEED
 	x_data = [];
@@ -309,7 +309,6 @@ function callback(response) {
 			marker: {color:'#fafafa',size:10},
 			line: {color:'#e4c6fa',width:4}
 		};
-	//data = [max, avg, min];
 	data = [avg];
 	graphDiv = document.getElementById('wind-speed-plot');
 	Plotly.newPlot(graphDiv, data, windSpeedlayout);
@@ -342,26 +341,13 @@ function callback(response) {
 	}	
 
 
-
 	// PRESSURE VS WIND/TEMP
 	var pressureData = [];
 	var windData = [];
-	/*
-	var pressureDataMax = [];
-	var pressureDataMin = [];
-	var windDataMax = [];
-	var windDataMin = [];
-	*/
 	data = [];
 	for(var i = 0; i < solNum.length; i++) {
 		pressureData.push(JSO[solNum[i]].PRE.av);
 		windData.push(JSO[solNum[i]].HWS.av);
-		/*
-		pressureDataMax.push(JSO[solNum[i]].PRE.mx);
-		pressureDataMin.push(JSO[solNum[i]].PRE.mn);
-		windDataMax.push(JSO[solNum[i]].HWS.mx);
-		windDataMin.push(JSO[solNum[i]].HWS.mn);
-		*/
 	}
 	var preVsWind = {
 		x: pressureData,
@@ -372,27 +358,9 @@ function callback(response) {
 		marker: { size: 12, color: "#d1ff82" },
 		//line: {width: 4, color: "#d1ff82"}
 	};
-	/*
-	var preVsWindMin = {
-		x: pressureDataMin,
-		y: windDataMin,
-		name: 'Min',
-		type: 'scatter',
-		marker: { size: 12, color: "#fafafa" },
-		line: {width: 4, color: "#ff8c82"}
-	}
-	var preVsWindMax = {
-		x: pressureDataMax,
-		y: windDataMax,
-		name: 'Max',
-		type: 'scatter',
-		marker: { size: 12, color: "#fafafa" },
-		line: {width: 4, color: "#e4c6fa"}
-	}
-	*/
-	//data = [preVsWind, preVsWindMax, preVsWindMin];
 	data = [preVsWind];
 	Plotly.newPlot('wind-direction-bar', data, windDirectionBarLayout);
+
 
 	// PRESSURE 
 	x_data = [];
@@ -429,7 +397,6 @@ function callback(response) {
 			marker: {color:'#fafafa',size: 10},
 			line: {color:'#e4c6fa',width:4}
 		};
-	//data = [max, avg, min];
 	data = [avg];
 	graphDiv = document.getElementById('pressure-plot');
 	Plotly.newPlot(graphDiv, data, pressureLayout);
@@ -448,103 +415,3 @@ function readTextFile(file, callback) {
 }
 
 readTextFile("http://www.uwuzi.com/data/data.json", callback);
-
-
-
-
-/* -----------------------------------------------------*/
-/* -------------------- DUMMY --------------------------*/
-/* -------------------- PLOTS ---------------------------*/
-/* -----------------------------------------------------*/
-{
-/*
-// TEMPERATURE 
-graphDiv = document.getElementById('temperature-plot');
-data = [{
-}];
-layout = {
-	title: {
-		text:'Temperature Data: x days',
-		font: {
-		  family: 'Courier New, monospace',
-		  size: 24,
-		  color: '#dfdfdf'
-		}
-	},
-  	xaxis: {
-    	title: 'Martian Sol (Day) # ',
-		color: '#dfdfdf',
-    	showgrid: true,
-    	zeroline: true
-  	},
-  	yaxis: {
-  	  	title: 'Temp (F)',
-		color: '#dfdfdf',
-  	  	showline: false
-	},
-	paper_bgcolor: paperBgColor,
-	plot_bgcolor: plotBgColor,
-	paper_fgcolor: paperFgColor,
-	plot_fgcolor: plotFgColor
-};
-Plotly.newPlot(graphDiv, data, layout);
-// WIND SPEED 
-graphDiv = document.getElementById('wind-speed-plot');
-data = [{
-}];
-layout = {
-	title: {
-		text:'Wind Speed Data: x days',
-		font: {
-		  family: 'Courier New, monospace',
-		  size: 24,
-		  color: '#dfdfdf'
-		}
-	},
-  	xaxis: {
-		title: 'Martian Sol (Day) # ',
-		color: '#dfdfdf',
-    	showgrid: true,
-    	zeroline: true
-  	},
-  	yaxis: {
-		title: 'Temp (F)',
-		color: '#dfdfdf',
-  	  	showline: false
-	},
-	paper_bgcolor: paperBgColor,
-	plot_bgcolor: plotBgColor,
-	paper_fgcolor: paperFgColor,
-	plot_fgcolor: plotFgColor
-};
-Plotly.newPlot(graphDiv, data, layout);
-data = [{
-  }]
-layout = {
-    font: {size: 16},
-	legend: {font: {size: 16}},
-	color: '#dfdfdf',
-    polar: {
-      barmode: "overlay",
-      bargap: 0,
-      radialaxis: {ticksuffix: "%", angle: 45, dtick: 20},
-      angularaxis: {direction: "clockwise"}
-	},
-	title: {
-		text:'Wind Direction [Wind Rose Chart]: x days',
-		font: {
-		  family: 'Courier New, monospace',
-		  size: 24,
-		  color: '#dfdfdf'
-		}
-	},
-
-	paper_bgcolor: paperBgColor,
-	plot_bgcolor: plotBgColor,
-	paper_fgcolor: paperFgColor,
-	plot_fgcolor: plotFgColor
-  }
-graphDiv = document.getElementById('wind-direction-plot');
-Plotly.newPlot(graphDiv, data, layout)
-*/
-}
