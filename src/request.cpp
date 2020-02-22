@@ -7,6 +7,7 @@
 
 using namespace nlohmann;
 
+// Read api from ../nasa-api-key -> needed for http request url
 std::string readApiKey()
 {
     std::ifstream fs;
@@ -20,6 +21,7 @@ std::string readApiKey()
     return key;
 }
 
+// The callback function for the http response
 size_t curlCallbackFuncToString(void *contents, size_t size, size_t nmemb, std::string *s)
 {
     size_t newLength = size*nmemb;
@@ -29,12 +31,13 @@ size_t curlCallbackFuncToString(void *contents, size_t size, size_t nmemb, std::
     }
     catch(std::bad_alloc &e)
     {
-        //handle memory problem
+        // Handle memory problem (unlikely)
         return 0;
     }
     return newLength;
 }
 
+// Return response to request in string form
 std::string makeRequest(std::string httpsUrl)
 {
   CURL *curl;
@@ -46,40 +49,11 @@ std::string makeRequest(std::string httpsUrl)
   curl = curl_easy_init();
   if(curl) {
     curl_easy_setopt(curl, CURLOPT_URL, httpsUrl.c_str());
-
-#define SKIP_PEER_VERIFICATION 0
-#define SKIP_HOSTNAME_VERIFICATION 0
- 
-#ifdef SKIP_PEER_VERIFICATION
-    /*
-     * If you want to connect to a site who isn't using a certificate that is
-     * signed by one of the certs in the CA bundle you have, you can skip the
-     * verification of the server's certificate. This makes the connection
-     * A LOT LESS SECURE.
-     *
-     * If you have a CA cert for the server stored someplace else than in the
-     * default bundle, then the CURLOPT_CAPATH option might come handy for
-     * you.
-     */ 
-    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
-#else
     curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1L);
-#endif
  
-#ifdef SKIP_HOSTNAME_VERIFICATION
-    /*
-     * If the site you're connecting to uses a different host name that what
-     * they have mentioned in their server certificate's commonName (or
-     * subjectAltName) fields, libcurl will refuse to connect. You can skip
-     * this check, but this will make the connection less secure.
-     */ 
-    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
-#else
     curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 1L);
-#endif
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curlCallbackFuncToString);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &s);
-    //curl_easy_setopt (curl, CURLOPT_VERBOSE, 1L); // verbose output
  
     /* Perform the request, res will get the return code */ 
     res = curl_easy_perform(curl);
@@ -88,35 +62,13 @@ std::string makeRequest(std::string httpsUrl)
       fprintf(stderr, "curl_easy_perform() failed: %s\n",
               curl_easy_strerror(res));
  
-    /* always cleanup */ 
     curl_easy_cleanup(curl);
   }
- 
   curl_global_cleanup();
-
   return s;
 }
 
-void readDetailedWindData(json& JSO, std::vector<std::string>& sol){
-    std::cout <<"\n\n";
-    for (int i = 0; i < 7; i++) {
-        std::string key1 = sol.at(i);
-        std::cout << "\n----------------------------------" << std::endl;
-        std::cout << "SOL #" << sol.at(i) << std::endl;
-        for (int j = 0; j < 15; j++) {
-            json js = JSO[key1]["WD"][std::to_string(j)];
-            if (!js.is_null()) {
-                std::cout << "compass_no: " << j << std::endl;
-                std::cout << "compass_degrees: " << JSO[key1]["WD"][std::to_string(j)]["compass_degrees"] << std::endl;
-                std::cout << "compass_point: " << JSO[key1]["WD"][std::to_string(j)]["compass_point"] << std::endl;
-                std::cout << "compass_right: " << JSO[key1]["WD"][std::to_string(j)]["compass_right"] << std::endl;
-                std::cout << "compass_up: " << JSO[key1]["WD"][std::to_string(j)]["compass_up"] << std::endl;
-                std::cout << "\n\n";
-            }
-        }
-    }
-}
-
+// This was for the initial setup of the json file. No longer needed but keeping it here.
 void outputInitialJsonToFile(json& JSO, std::vector<std::string>& sol, const char* outFile){
     std::ofstream outStream (outFile, std::ios::out | std::ios::app);
 	if (outStream.is_open()) {
@@ -128,6 +80,7 @@ void outputInitialJsonToFile(json& JSO, std::vector<std::string>& sol, const cha
     outStream.close();
 }
 
+// Append the last key of JSON object (the newest data) at the end of the 'outFile'
 void outputJsonToFile(json& JSO, std::vector<std::string>& sol, const char* outFile){
     std::ofstream outStream (outFile, std::ios::out | std::ios::app);
     if (outStream.is_open()) {
@@ -137,6 +90,8 @@ void outputJsonToFile(json& JSO, std::vector<std::string>& sol, const char* outF
     outStream.close();
 }
 
+// Read JSON from file
+// Pass in a JSON object reference, give it the data from given file
 int jsonRead(nlohmann::json& JSO, const char* fileName) {
     std::ifstream inStream(fileName, std::ios::in | std::ios::ate);
     if (inStream.is_open()) {
@@ -151,6 +106,7 @@ int jsonRead(nlohmann::json& JSO, const char* fileName) {
     return -1;
 }
 
+// Concatenate dest with src (specifically the object stored at the index 'key')
 int jsonCat(nlohmann::json& dest, const nlohmann::json& src, const std::string& key) {
     if (!src.is_null()){
         dest[key] = src[key];
@@ -161,10 +117,12 @@ int jsonCat(nlohmann::json& dest, const nlohmann::json& src, const std::string& 
 
 
 
+// Create full path with api key
 std::string resolveRequestURL() {
     return "https://api.nasa.gov/insight_weather/?api_key=" + readApiKey() + "&feedtype=json&ver=1.0";
 }
 
+// Validate the JSON object (if any of the readings are NULL, do not update anything)
 bool isValidData(json& JSO, std::vector<std::string>& solVec)
 {
 	std::string solNum = solVec.back();
@@ -175,6 +133,8 @@ bool isValidData(json& JSO, std::vector<std::string>& solVec)
 	return true;
 }
 
+// Couts a json object that is the old data appended with the newest data.
+// Use a bash script to redirect into a file. Then backup the old one and replace it with the new one.
 nlohmann::json updateJson(const char* oldJsonFile, nlohmann::json& requestJSO, std::vector<std::string>& sol) {
 
     nlohmann::json readJSO;
